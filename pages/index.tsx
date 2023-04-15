@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import PresentationForm from '../components/PresentationForm';
+import Slide from '../components/Slide';
+import { parseSlides } from '../utils/parseSlides';
 
 const HomePage = () => {
-  const [slideContent, setSlideContent] = useState('');
+  const [slides, setSlides] = useState([]);
 
   const handleFormSubmit = async (formData) => {
     try {
@@ -15,7 +17,8 @@ const HomePage = () => {
       });
 
       const data = await response.json();
-      setSlideContent(data.slideContent);
+      const parsedSlides = parseSlides(data.slideContent);
+      setSlides(parsedSlides);
     } catch (error) {
       console.error('Failed to generate slides:', error);
     }
@@ -25,10 +28,12 @@ const HomePage = () => {
     <div>
       <h1>Generate Presentation Slides</h1>
       <PresentationForm onSubmit={handleFormSubmit} />
-      {slideContent && (
+      {slides.length > 0 && (
         <div>
           <h2>Generated Slides</h2>
-          <p>{slideContent}</p>
+          {slides.map((slide, index) => (
+            <Slide key={index} title={slide.title} content={slide.content} />
+          ))}
         </div>
       )}
     </div>
