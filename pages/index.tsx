@@ -3,10 +3,21 @@ import PresentationForm from '../components/PresentationForm';
 import Slide from '../components/Slide';
 import { parseSlides } from '../utils/parseSlides';
 
-const HomePage = () => {
-  const [slides, setSlides] = useState([]);
+interface FormData {
+  topic: string;
+  ideas: string;
+  duration: string;
+}
 
-  const handleFormSubmit = async (formData) => {
+interface SlideData {
+  title: string;
+  content: string;
+}
+
+const HomePage = () => {
+  const [slides, setSlides] = useState<SlideData[]>([]);
+
+  const handleFormSubmit = async (formData: FormData) => {
     try {
       const response = await fetch('/api/generateSlides', {
         method: 'POST',

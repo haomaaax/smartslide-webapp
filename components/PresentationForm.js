@@ -2,46 +2,67 @@ import React, { useState } from 'react';
 import styles from './PresentationForm.module.css';
 
 const PresentationForm = ({ onSubmit }) => {
-  const [topic, setTopic] = useState('');
-  const [ideas, setIdeas] = useState('');
-  const [duration, setDuration] = useState('');
+    
+  const [formData, setFormData] = useState({
+    topic: '',
+    ideas: '',
+    duration: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ topic, ideas, duration });
+    onSubmit(formData);
   };
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      <label htmlFor="topic">Presentation Topic:</label>
+      <label htmlFor="topic" className={styles.label}>
+        Topic
+      </label>
       <input
         type="text"
         id="topic"
-        value={topic}
-        onChange={(e) => setTopic(e.target.value)}
+        name="topic"
+        value={formData.topic}
+        onChange={handleChange}
+        className={styles.input}
         required
       />
 
-      <label htmlFor="ideas">Presentation Ideas:</label>
+      <label htmlFor="ideas" className={styles.label}>
+        Main Ideas
+      </label>
       <textarea
         id="ideas"
-        value={ideas}
-        onChange={(e) => setIdeas(e.target.value)}
+        name="ideas"
+        value={formData.ideas}
+        onChange={handleChange}
+        className={styles.textarea}
         required
       />
 
-      <label htmlFor="duration">Scheduled Presentation Time (minutes):</label>
+      <label htmlFor="duration" className={styles.label}>
+        Presentation Duration (minutes)
+      </label>
       <input
         type="number"
         id="duration"
-        value={duration}
-        onChange={(e) => setDuration(e.target.value)}
+        name="duration"
+        value={formData.duration}
+        onChange={handleChange}
+        className={styles.input}
         required
       />
 
-      <button type="submit">Generate Slides</button>
+      <button type="submit" className={styles.button}>
+        Generate Slides
+      </button>
     </form>
-    
   );
 };
 

@@ -1,31 +1,61 @@
-import openai from 'openai';
+import { Configuration, OpenAIApi } from 'openai';
 
-openai.apiKey = process.env.OPENAI_API_KEY;
+const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+});
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const { topic, ideas, duration } = req.body;
+const openai = new OpenAIApi(configuration);
 
+const generateSlidesHandler = async (req, res) => {
+    if (req.method === 'POST') {
     try {
-      const prompt = `Generate a presentation outline with slides for a ${duration}-minute presentation about "${topic}". The main ideas are: ${ideas}.`;
+        const { topic, ideas, duration } = req.body;
 
-      const response = await openai.Completion.create({
-        engine: 'gpt-3.5-turbo',
-        prompt,
-        max_tokens: 150,
-        n: 1,
-        stop: null,
-        temperature: 0.7,
-      });
+        // Call GPT-3.5-turbo API to generate slides
+        const slideContent = await generateSlidesWithGpt35API(topic, ideas, duration);
 
-      const slideContent = response.choices[0].text.trim();
-      res.status(200).json({ slideContent });
+        res.status(200).json({ slideContent });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Failed to generate slides' });
+        console.error('Error generating slides:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-  } else {
-    res.setHeader('Allow', 'POST');
-    res.status(405).end('Method Not Allowed');
-  }
+    } else {
+        res.status(405).json({ error: 'Method Not Allowed' });
+    }
+};
+
+export default generateSlidesHandler;
+
+async function generateSlidesWithGpt35API(topic, ideas, duration) {
+    // Construct the messages for GPT-3.5-turbo
+    try{
+    const messages = [
+        { role: 'system', content: 'You are a helpful assistant that generates presentation slides.' },
+        { role: 'user', content: `Generate a summary and slide content for a presentation about "${topic}" with the main ideas: "${ideas}", to be presented in ${duration} minutes.` },
+        { role: 'user', content: `Be sure to have Slide %d: format as delimiter with your output.` },
+    ];
+
+    // Call the OpenAI API
+    const response = await openai.createChatCompletion({
+        model: 'gpt-3.5-turbo-0301',
+        messages: messages,
+    });
+
+    // Log the entire response object
+    console.log('OpenAI API response:', response.data.choices[0].message);
+
+    // Extract the generated content
+    const generatedText = response.data.choices[0].message.content.trim();
+
+    // Parse the generated text into slides
+    const slideContent = generatedText.split(/\n\s*Slide \d+:/).slice(1).map((text, index) => {
+        const lines = text.trim().split('\n');
+        return { title: `Slide ${index + 1}`, content: lines.join(' ') };
+    });
+
+    return slideContent;
+    } catch (error) {
+        console.error('Error in generateSlidesWithGpt35API:', error.message);
+        throw error;
+    }
 }
