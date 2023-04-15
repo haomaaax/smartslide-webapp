@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styles from './PresentationForm.module.css';
 
 const PresentationForm = ({ onSubmit }) => {
   const [topic, setTopic] = useState('');
@@ -11,7 +12,7 @@ const PresentationForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={styles.form}>
       <label htmlFor="topic">Presentation Topic:</label>
       <input
         type="text"
@@ -40,6 +41,7 @@ const PresentationForm = ({ onSubmit }) => {
 
       <button type="submit">Generate Slides</button>
     </form>
+    
   );
 };
 
