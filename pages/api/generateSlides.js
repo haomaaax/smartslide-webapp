@@ -33,6 +33,7 @@ async function generateSlidesWithGpt35API(topic, ideas, duration) {
         { role: 'system', content: 'You are a helpful assistant that generates presentation slides.' },
         { role: 'user', content: `Generate a summary and slide content for a presentation about "${topic}" with the main ideas: "${ideas}", to be presented in ${duration} minutes.` },
         { role: 'user', content: `Be sure to have Slide %d: format as delimiter with your output.` },
+        { role: 'user', content: `Giving estimate time for each slide and key takeaways to be mentioned in each slides.` },
     ];
 
     // Call the OpenAI API
