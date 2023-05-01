@@ -38,7 +38,7 @@ const HomePage = () => {
   return (
     <div className="container">
       <h1>SmartSlide</h1>
-      <h3>Help junior employees to create good slides in 1 click</h3>
+      <h3>Create presentation slides in 1 click</h3>
       <PresentationForm onSubmit={handleFormSubmit} />
       {slides.length > 0 && (
         <div>
