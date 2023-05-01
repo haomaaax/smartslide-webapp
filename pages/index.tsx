@@ -16,9 +16,11 @@ interface SlideData {
 
 const HomePage = () => {
   const [slides, setSlides] = useState<SlideData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFormSubmit = async (formData: FormData) => {
     try {
+      setIsLoading(true); // Set loading state to true before the API call
       const response = await fetch('/api/generateSlides', {
         method: 'POST',
         headers: {
@@ -32,6 +34,8 @@ const HomePage = () => {
       setSlides(parsedSlides);
     } catch (error) {
       console.error('Failed to generate slides:', error);
+    } finally {
+      setIsLoading(false); // Set loading state to false after the API call is complete
     }
   };
 
@@ -39,7 +43,7 @@ const HomePage = () => {
     <div className="container">
       <h1>SmartSlide</h1>
       <h3>Create presentation slides in 1 click</h3>
-      <PresentationForm onSubmit={handleFormSubmit} />
+      <PresentationForm onSubmit={handleFormSubmit} isLoading={isLoading} />
       {slides.length > 0 && (
         <div>
           <h2>Generated Slides</h2>

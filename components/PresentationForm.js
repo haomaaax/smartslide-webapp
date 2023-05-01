@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styles from './PresentationForm.module.css';
 
-const PresentationForm = ({ onSubmit }) => {
-    
+const PresentationForm = ({ onSubmit, isLoading }) => {
+
   const [formData, setFormData] = useState({
     topic: '',
     ideas: '',
@@ -59,8 +59,8 @@ const PresentationForm = ({ onSubmit }) => {
         required
       />
 
-      <button type="submit" className={styles.button}>
-        Generate Slides
+      <button type="submit" className={styles.button} disabled={isLoading}>
+        {isLoading ? 'Loading...' : 'Generate Slides'}
       </button>
     </form>
   );
