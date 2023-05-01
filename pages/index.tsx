@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PresentationForm from '../components/PresentationForm';
 import Slide from '../components/Slide';
 import { parseSlides } from '../utils/parseSlides';
+import styles from '../components/Slide.module.css';
 
 interface FormData {
   topic: string;
@@ -42,14 +43,18 @@ const HomePage = () => {
   return (
     <div className="container">
       <h1>SmartSlide</h1>
-      <h3>Create presentation slides in 1 click</h3>
-      <PresentationForm onSubmit={handleFormSubmit} isLoading={isLoading} />
+      <h3>✨ Create presentation slides in 1 click ✨</h3>
+      <PresentationForm onSubmit={handleFormSubmit} isLoading={isLoading}/>
       {slides.length > 0 && (
+        
         <div>
-          <h2>Generated Slides</h2>
-          {slides.map((slide, index) => (
-            <Slide key={index} title={slide.title} content={slide.content} />
-          ))}
+          <div><h1>🧙🏼‍♂️🪄</h1></div>
+          <h3>✨ Your slides are ready ✨</h3>
+          <div className={styles.container}>
+            {slides.map((slide, index) => (
+              <Slide key={index} title={slide.title} content={slide.content} />
+            ))}
+          </div>
         </div>
       )}
     </div>

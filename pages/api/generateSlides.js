@@ -31,9 +31,11 @@ async function generateSlidesWithGpt35API(topic, ideas, duration) {
     try{
     const messages = [
         { role: 'system', content: 'You are a helpful assistant that generates presentation slides.' },
-        { role: 'user', content: `Generate a summary and slide content for a presentation about "${topic}" with the main ideas: "${ideas}", to be presented in ${duration} minutes.` },
-        { role: 'user', content: `Be sure to have Slide %d: format as delimiter with your output.` },
-        { role: 'user', content: `Giving estimate time for each slide and key takeaways to be mentioned in each slides.` },
+        { role: 'user', content: `Generate slide contents for a presentation about "${topic}" with the main ideas: "${ideas}", to be presented in ${duration} minutes.` },
+        { role: 'user', content: `Generate only contents, no message reply to my request.` },
+        { role: 'user', content: `Giving estimate time for each slide and key takeaways that audience needs to know.` },
+        { role: 'user', content: `Make sure slide content is simple and concise to show on each slide decks.` },
+        { role: 'user', content: `Add the --- delimiter at the end of each slide, I will parse output to show with webapp parser.` },
     ];
 
     // Call the OpenAI API
@@ -48,13 +50,8 @@ async function generateSlidesWithGpt35API(topic, ideas, duration) {
     // Extract the generated content
     const generatedText = response.data.choices[0].message.content.trim();
 
-    // Parse the generated text into slides
-    const slideContent = generatedText.split(/\n\s*Slide \d+:/).slice(1).map((text, index) => {
-        const lines = text.trim().split('\n');
-        return { title: `Slide ${index + 1}`, content: lines.join(' ') };
-    });
+    return generatedText;
 
-    return slideContent;
     } catch (error) {
         console.error('Error in generateSlidesWithGpt35API:', error.message);
         throw error;

@@ -60,7 +60,7 @@ const PresentationForm = ({ onSubmit, isLoading }) => {
       />
 
       <button type="submit" className={styles.button} disabled={isLoading}>
-        {isLoading ? 'Loading...' : 'Generate Slides'}
+        {isLoading ? 'Generating ... please wait :)' : 'Generate Slides'}
       </button>
     </form>
   );
